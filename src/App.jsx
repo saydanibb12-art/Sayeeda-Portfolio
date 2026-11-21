@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  ArrowUpRight, Download, Github, Linkedin, Mail, Menu, X,
+  ArrowUpRight, Download, Github, Linkedin, Mail, Menu, Moon, Sun, X,
   Code2, BrainCircuit, Leaf, Plane, Hotel, GraduationCap, MapPin,
   Sparkles, ExternalLink
 } from "lucide-react";
@@ -48,6 +48,13 @@ const projects = [
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem("portfolio-theme") === "dark" ? "dark" : "light");
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
@@ -72,14 +79,25 @@ function App() {
       <header className="site-header">
         <nav className="nav wrap">
           <a className="brand" href="#home" onClick={closeMenu}>S<span>N.</span></a>
-          <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
-            {menuOpen ? <X /> : <Menu />}
-          </button>
           <div className={`nav-links ${menuOpen ? "open" : ""}`}>
             {["Home", "About", "Skills", "Projects", "Education", "Contact"].map(item =>
               <a key={item} href={`#${item.toLowerCase()}`} onClick={closeMenu}>{item}</a>
             )}
             <a className="nav-contact" href="#contact" onClick={closeMenu}>Let's Connect <ArrowUpRight size={15} /></a>
+          </div>
+          <div className="nav-actions">
+            <button
+              className="theme-toggle"
+              type="button"
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
+              aria-pressed={theme === "dark"}
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            >
+              {theme === "light" ? <Moon size={18} aria-hidden="true" /> : <Sun size={18} aria-hidden="true" />}
+            </button>
+            <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
+              {menuOpen ? <X /> : <Menu />}
+            </button>
           </div>
         </nav>
       </header>
